@@ -1,0 +1,32 @@
+version: '2.1'
+
+services:
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=django
+      - MYSQL_PASSWORD=django
+      - MYSQL_DATABASE=django
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-persistance:/var/lib/mysql
+
+  django-app:
+    build: .
+    environment:
+      - SECRET_KEY=django-app
+      - DATABASE_NAME=django
+      - DATABASE_USER=django
+      - DATABASE_PASSWORD=django
+      - DATABASE_HOST=db
+    volumes:
+      - ./src:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  db-persistance:
